@@ -57,6 +57,13 @@ dependencies {
     ksp(libs.google.hilt.compiler)
 }
 
+val mavenCentralUsername: String? = System.getenv("MAVEN_CENTRAL_USERNAME")
+val mavenCentralPassword: String? = System.getenv("MAVEN_CENTRAL_PASSWORD")
+val signingKeyId: String? = System.getenv("SIGNING_KEY_ID")
+val signingPassword: String? = System.getenv("SIGNING_PASSWORD")
+val signingSecretKeyRingFile: String? = System.getenv("SIGNING_SECRET_KEY_RING_FILE")
+
+
 
 mavenPublishing {
     publishToMavenCentral(SonatypeHost.CENTRAL_PORTAL, automaticRelease = true)
