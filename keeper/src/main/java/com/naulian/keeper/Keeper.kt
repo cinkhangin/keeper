@@ -13,9 +13,16 @@ import androidx.datastore.preferences.core.stringPreferencesKey
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.runBlocking
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
 import javax.inject.Inject
 
 typealias DsPrefs = DataStore<Preferences>
+
+@Serializable
+data class User(val name: String, val age: Int) {
+}
 
 class Keeper @Inject constructor(private val dsPrefs: DataStore<Preferences>) {
     suspend fun recallStringAsFlow(
@@ -50,6 +57,26 @@ class Keeper @Inject constructor(private val dsPrefs: DataStore<Preferences>) {
     fun recallString(key: String, defValue: String = "") = dsPrefs.recallString(key, defValue)
     fun recallLong(key: String, defValue: Long = 0L) = dsPrefs.recallLong(key, defValue)
     fun recallFloat(key: String, defValue: Float = 0f) = dsPrefs.recallFloat(key, defValue)
+
+    suspend inline fun <reified T> keep(key: String, defValue: T) {
+        val dataString = Json.encodeToString(defValue)
+        keepString(key, dataString)
+    }
+
+    inline fun <reified T> recall(key: String, defValue: T): T {
+        val dataString = recallString(key)
+        if (dataString.isEmpty()) return defValue
+
+        val dataObj = Json.decodeFromString<T>(dataString)
+        return dataObj
+    }
+
+    suspend inline fun <reified T> recallAsFlow(
+        key: String, defValue: T, crossinline action: (T) -> Unit
+    ) = recallStringAsFlow(key) {
+        if (it.isEmpty()) action(defValue)
+        else action(Json.decodeFromString<T>(it))
+    }
 }
 
 //flow
