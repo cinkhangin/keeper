@@ -52,28 +52,21 @@ dependencies {
 
     //datastore
     api(libs.androidx.datastore.preferences)
+    //api(libs.androidx.datastore)
     //hilt
     implementation(libs.google.hilt.android)
     ksp(libs.google.hilt.compiler)
 }
-
-val mavenCentralUsername: String? = System.getenv("MAVEN_CENTRAL_USERNAME")
-val mavenCentralPassword: String? = System.getenv("MAVEN_CENTRAL_PASSWORD")
-val signingKeyId: String? = System.getenv("SIGNING_KEY_ID")
-val signingPassword: String? = System.getenv("SIGNING_PASSWORD")
-val signingSecretKeyRingFile: String? = System.getenv("SIGNING_SECRET_KEY_RING_FILE")
-
-
 
 mavenPublishing {
     publishToMavenCentral(SonatypeHost.CENTRAL_PORTAL, automaticRelease = true)
 
     signAllPublications()
 
-    coordinates("com.naulian", "keeper", "0.1.0-alpha01")
+    coordinates("com.naulian", "keeper", "0.2.0-rc")
 
     pom {
-        name.set("Modify")
+        name.set("Keeper")
         description.set("An Android library to easily setup DataStore for simple apps")
         inceptionYear.set("2024")
         url.set("https://github.com/cinkhangin/keeper/")
