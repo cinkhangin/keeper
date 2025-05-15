@@ -7,6 +7,7 @@ import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.floatPreferencesKey
+import androidx.datastore.preferences.core.intPreferencesKey
 import androidx.datastore.preferences.core.longPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
 import kotlinx.coroutines.flow.first
@@ -158,9 +159,9 @@ private suspend fun <T> DsPrefs.keepPref(
 ) = edit { it[key] = value }
 
 //if user dont want to add datastore library
-fun intPreferencesKey(name: String): Preferences.Key<Int> = intPreferencesKey(name)
-fun stringPreferencesKey(name: String): Preferences.Key<String> = stringPreferencesKey(name)
-fun booleanPreferencesKey(name: String): Preferences.Key<Boolean> = booleanPreferencesKey(name)
-fun floatPreferencesKey(name: String): Preferences.Key<Float> = floatPreferencesKey(name)
-fun longPreferencesKey(name: String): Preferences.Key<Long> = longPreferencesKey(name)
+fun intPrefKey(name: String): Preferences.Key<Int> = intPreferencesKey(name)
+fun stringPrefKey(name: String): Preferences.Key<String> = stringPreferencesKey(name)
+fun booleanPrefKey(name: String): Preferences.Key<Boolean> = booleanPreferencesKey(name)
+fun floatPrefKey(name: String): Preferences.Key<Float> = floatPreferencesKey(name)
+fun longPrefKey(name: String): Preferences.Key<Long> = longPreferencesKey(name)
 
