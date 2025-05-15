@@ -7,5 +7,5 @@ plugins {
     alias(libs.plugins.google.ksp) apply false
     alias(libs.plugins.google.hilt) apply false
     alias(libs.plugins.kotlinx.serialization) apply false
-    id("com.vanniktech.maven.publish") version "0.30.0"
+    alias(libs.plugins.vanniktech.maven) apply false
 }

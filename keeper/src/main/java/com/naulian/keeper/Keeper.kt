@@ -4,12 +4,7 @@ package com.naulian.keeper
 
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
-import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
-import androidx.datastore.preferences.core.floatPreferencesKey
-import androidx.datastore.preferences.core.intPreferencesKey
-import androidx.datastore.preferences.core.longPreferencesKey
-import androidx.datastore.preferences.core.stringPreferencesKey
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.runBlocking
@@ -157,11 +152,3 @@ suspend fun DsPrefs.keepFloat(
 private suspend fun <T> DsPrefs.keepPref(
     key: Preferences.Key<T>, value: T
 ) = edit { it[key] = value }
-
-//if user dont want to add datastore library
-fun intPrefKey(name: String): Preferences.Key<Int> = intPreferencesKey(name)
-fun stringPrefKey(name: String): Preferences.Key<String> = stringPreferencesKey(name)
-fun booleanPrefKey(name: String): Preferences.Key<Boolean> = booleanPreferencesKey(name)
-fun floatPrefKey(name: String): Preferences.Key<Float> = floatPreferencesKey(name)
-fun longPrefKey(name: String): Preferences.Key<Long> = longPreferencesKey(name)
-
