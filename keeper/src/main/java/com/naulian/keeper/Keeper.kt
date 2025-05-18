@@ -13,60 +13,106 @@ import kotlinx.serialization.json.Json
 import javax.inject.Inject
 
 typealias DsPrefs = DataStore<Preferences>
+typealias PrefKey<T> = Preferences.Key<T>
 
 interface KeeperData
 
 class Keeper @Inject constructor(private val dsPrefs: DataStore<Preferences>) {
+    //as Flow
+    private fun <T> DsPrefs.recallPrefAsFlow(
+        key: PrefKey<T>, defValue: T
+    ) = data.map { it[key] ?: defValue }
+
+    fun recallStringAsFlow(
+        key: PrefKey<String>, defValue: String = ""
+    ) = dsPrefs.recallPrefAsFlow(key, defValue)
+
+    fun recallBooleanAsFlow(
+        key: PrefKey<Boolean>, defValue: Boolean = false
+    ) = dsPrefs.recallPrefAsFlow(key, defValue)
+
+    fun recallIntAsFlow(
+        key: PrefKey<Int>, defValue: Int = 0
+    ) = dsPrefs.recallPrefAsFlow(key, defValue)
+
+    fun recallLongAsFlow(
+        key: PrefKey<Long>, defValue: Long = 0L
+    ) = dsPrefs.recallPrefAsFlow(key, defValue)
+
+    fun recallFloatAsFlow(
+        key: PrefKey<Float>, defValue: Float = 0f
+    ) = dsPrefs.recallPrefAsFlow(key, defValue)
+
+    //collect
     suspend fun recallStringAsFlow(
-        key: Preferences.Key<String>, defValue: String = "", action: (String) -> Unit
-    ) = dsPrefs.recallStringAsFlow(key, defValue).collect(action)
+        key: PrefKey<String>, defValue: String = "", action: (String) -> Unit
+    ) = dsPrefs.recallPrefAsFlow(key, defValue).collect(action)
 
     suspend fun recallBooleanAsFlow(
-        key: Preferences.Key<Boolean>, defValue: Boolean = false, action: (Boolean) -> Unit
-    ) = dsPrefs.recallBooleanAsFlow(key, defValue).collect(action)
+        key: PrefKey<Boolean>, defValue: Boolean = false, action: (Boolean) -> Unit
+    ) = dsPrefs.recallPrefAsFlow(key, defValue).collect(action)
 
     suspend fun recallIntAsFlow(
-        key: Preferences.Key<Int>, defValue: Int = 0, action: (Int) -> Unit
-    ) = dsPrefs.recallIntAsFlow(key, defValue).collect(action)
+        key: PrefKey<Int>, defValue: Int = 0, action: (Int) -> Unit
+    ) = dsPrefs.recallPrefAsFlow(key, defValue).collect(action)
 
     suspend fun recallLongAsFlow(
-        key: Preferences.Key<Long>, defValue: Long = 0L, action: (Long) -> Unit
-    ) = dsPrefs.recallLongAsFlow(key, defValue).collect(action)
+        key: PrefKey<Long>, defValue: Long = 0L, action: (Long) -> Unit
+    ) = dsPrefs.recallPrefAsFlow(key, defValue).collect(action)
 
     suspend fun recallFloatAsFlow(
-        key: Preferences.Key<Float>, defValue: Float = 0f, action: (Float) -> Unit
-    ) = dsPrefs.recallFloatAsFlow(key, defValue).collect(action)
+        key: PrefKey<Float>, defValue: Float = 0f, action: (Float) -> Unit
+    ) = dsPrefs.recallPrefAsFlow(key, defValue).collect(action)
 
 
-    suspend fun keepBoolean(key: Preferences.Key<Boolean>, value: Boolean) =
-        dsPrefs.keepBoolean(key, value)
+    //keep
+    private suspend fun <T> DsPrefs.keepPref(
+        key: PrefKey<T>, value: T
+    ) = edit { it[key] = value }
 
-    suspend fun keepInt(key: Preferences.Key<Int>, value: Int) = dsPrefs.keepInt(key, value)
-    suspend fun keepString(key: Preferences.Key<String>, value: String) =
-        dsPrefs.keepString(key, value)
+    suspend fun keepBoolean(
+        key: PrefKey<Boolean>, value: Boolean
+    ) = dsPrefs.keepPref(key, value)
 
-    suspend fun keepLong(key: Preferences.Key<Long>, value: Long) = dsPrefs.keepLong(key, value)
-    suspend fun keepFloat(key: Preferences.Key<Float>, value: Float) = dsPrefs.keepFloat(key, value)
+    suspend fun keepInt(
+        key: PrefKey<Int>, value: Int
+    ) = dsPrefs.keepPref(key, value)
 
-    fun recallBoolean(key: Preferences.Key<Boolean>, defValue: Boolean = false) =
-        dsPrefs.recallBoolean(key, defValue)
+    suspend fun keepString(
+        key: PrefKey<String>, value: String
+    ) = dsPrefs.keepPref(key, value)
 
-    fun recallInt(key: Preferences.Key<Int>, defValue: Int = 0) = dsPrefs.recallInt(key, defValue)
-    fun recallString(key: Preferences.Key<String>, defValue: String = "") =
-        dsPrefs.recallString(key, defValue)
+    suspend fun keepLong(
+        key: PrefKey<Long>, value: Long
+    ) = dsPrefs.keepPref(key, value)
 
-    fun recallLong(key: Preferences.Key<Long>, defValue: Long = 0L) =
-        dsPrefs.recallLong(key, defValue)
+    suspend fun keepFloat(
+        key: PrefKey<Float>, value: Float
+    ) = dsPrefs.keepPref(key, value)
 
-    fun recallFloat(key: Preferences.Key<Float>, defValue: Float = 0f) =
-        dsPrefs.recallFloat(key, defValue)
 
-    suspend inline fun <reified T : KeeperData> keep(key: Preferences.Key<String>, value: T) {
+    //recall
+    fun recallBoolean(key: PrefKey<Boolean>, defValue: Boolean = false) =
+        runBlocking { recallBooleanAsFlow(key, defValue).first() }
+
+    fun recallInt(key: PrefKey<Int>, defValue: Int = 0) =
+        runBlocking { recallIntAsFlow(key, defValue).first() }
+
+    fun recallString(key: PrefKey<String>, defValue: String = "") =
+        runBlocking { recallStringAsFlow(key, defValue).first() }
+
+    fun recallLong(key: PrefKey<Long>, defValue: Long = 0L) =
+        runBlocking { recallLongAsFlow(key, defValue).first() }
+
+    fun recallFloat(key: PrefKey<Float>, defValue: Float = 0f) =
+        runBlocking { recallFloatAsFlow(key, defValue).first() }
+
+    suspend inline fun <reified T : KeeperData> keep(key: PrefKey<String>, value: T) {
         val dataString = Json.encodeToString(value)
         keepString(key, dataString)
     }
 
-    inline fun <reified T> recall(key: Preferences.Key<String>, defValue: T): T {
+    inline fun <reified T> recall(key: PrefKey<String>, defValue: T): T {
         val dataString = recallString(key)
         if (dataString.isEmpty()) return defValue
 
@@ -75,80 +121,10 @@ class Keeper @Inject constructor(private val dsPrefs: DataStore<Preferences>) {
     }
 
     suspend inline fun <reified T> recallAsFlow(
-        key: Preferences.Key<String>, defValue: T, crossinline action: (T) -> Unit
+        key: PrefKey<String>, defValue: T, crossinline action: (T) -> Unit
     ) = recallStringAsFlow(key) {
         if (it.isEmpty()) action(defValue)
         else action(Json.decodeFromString<T>(it))
     }
 }
 
-//flow
-fun DsPrefs.recallStringAsFlow(
-    key: Preferences.Key<String>, defValue: String = ""
-) = recallPrefAsFlow(key, defValue)
-
-fun DsPrefs.recallBooleanAsFlow(
-    key: Preferences.Key<Boolean>, defValue: Boolean = false
-) = recallPrefAsFlow(key, defValue)
-
-fun DsPrefs.recallIntAsFlow(
-    key: Preferences.Key<Int>, defValue: Int = 0
-) = recallPrefAsFlow(key, defValue)
-
-fun DsPrefs.recallLongAsFlow(
-    key: Preferences.Key<Long>, defValue: Long = 0L
-) = recallPrefAsFlow(key, defValue)
-
-fun DsPrefs.recallFloatAsFlow(
-    key: Preferences.Key<Float>, defValue: Float = 0f
-) = recallPrefAsFlow(key, defValue)
-
-private fun <T> DsPrefs.recallPrefAsFlow(
-    key: Preferences.Key<T>, defValue: T
-) = data.map { it[key] ?: defValue }
-
-//recall
-fun DsPrefs.recallBoolean(
-    key: Preferences.Key<Boolean>, defValue: Boolean = false
-) = runBlocking { recallBooleanAsFlow(key, defValue).first() }
-
-fun DsPrefs.recallInt(
-    key: Preferences.Key<Int>, defValue: Int = 0
-) = runBlocking { recallIntAsFlow(key, defValue).first() }
-
-fun DsPrefs.recallString(
-    key: Preferences.Key<String>, defValue: String = ""
-) = runBlocking { recallStringAsFlow(key, defValue).first() }
-
-fun DsPrefs.recallLong(
-    key: Preferences.Key<Long>, defValue: Long = 0L
-) = runBlocking { recallLongAsFlow(key, defValue).first() }
-
-fun DsPrefs.recallFloat(
-    key: Preferences.Key<Float>, defValue: Float = 0f
-) = runBlocking { recallFloatAsFlow(key, defValue).first() }
-
-//write
-suspend fun DsPrefs.keepBoolean(
-    key: Preferences.Key<Boolean>, value: Boolean
-) = keepPref(key, value)
-
-suspend fun DsPrefs.keepInt(
-    key: Preferences.Key<Int>, value: Int
-) = keepPref(key, value)
-
-suspend fun DsPrefs.keepString(
-    key: Preferences.Key<String>, value: String
-) = keepPref(key, value)
-
-suspend fun DsPrefs.keepLong(
-    key: Preferences.Key<Long>, value: Long
-) = keepPref(key, value)
-
-suspend fun DsPrefs.keepFloat(
-    key: Preferences.Key<Float>, value: Float
-) = keepPref(key, value)
-
-private suspend fun <T> DsPrefs.keepPref(
-    key: Preferences.Key<T>, value: T
-) = edit { it[key] = value }

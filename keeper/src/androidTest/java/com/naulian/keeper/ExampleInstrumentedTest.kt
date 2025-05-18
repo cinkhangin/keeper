@@ -7,6 +7,7 @@ import androidx.datastore.preferences.core.longPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import kotlinx.coroutines.runBlocking
 
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -24,39 +25,49 @@ class ExampleInstrumentedTest {
     fun intPref_isCorrect() {
         val appContext = InstrumentationRegistry.getInstrumentation().targetContext
         val keeper = Keeper(appContext.datastore)
-        val intPref = keeper.recallInt(intPreferencesKey("int"), 0)
-        assertEquals(0, intPref)
+        val key = intPreferencesKey("int")
+        runBlocking { keeper.keepInt(key, 42) }
+        val intPref = keeper.recallInt(key, 0)
+        assertEquals(42, intPref)
     }
 
     @Test
     fun stringPref_isCorrect() {
         val appContext = InstrumentationRegistry.getInstrumentation().targetContext
         val keeper = Keeper(appContext.datastore)
-        val stringPref = keeper.recallString(stringPreferencesKey("string"), "")
-        assertEquals("", stringPref)
+        val key = stringPreferencesKey("string")
+        runBlocking { keeper.keepString(key, "42") }
+        val stringPref = keeper.recallString(key, "")
+        assertEquals("42", stringPref)
     }
 
     @Test
     fun booleanPref_isCorrect() {
         val appContext = InstrumentationRegistry.getInstrumentation().targetContext
         val keeper = Keeper(appContext.datastore)
-        val booleanPref = keeper.recallBoolean(booleanPreferencesKey("boolean"), false)
-        assertEquals(false, booleanPref)
+        val key = booleanPreferencesKey("boolean")
+        runBlocking { keeper.keepBoolean(key, true) }
+        val booleanPref = keeper.recallBoolean(key, false)
+        assertEquals(true, booleanPref)
     }
 
     @Test
     fun floatPref_isCorrect() {
         val appContext = InstrumentationRegistry.getInstrumentation().targetContext
         val keeper = Keeper(appContext.datastore)
-        val floatPref = keeper.recallFloat(floatPreferencesKey("float"), 0f)
-        assertEquals(0f, floatPref)
+        val key = floatPreferencesKey("float")
+        runBlocking { keeper.keepFloat(key, 4.2f) }
+        val floatPref = keeper.recallFloat(key, 0f)
+        assertEquals(4.2f, floatPref)
     }
 
     @Test
-    fun longPref_isCorrect(){
+    fun longPref_isCorrect() {
         val appContext = InstrumentationRegistry.getInstrumentation().targetContext
         val keeper = Keeper(appContext.datastore)
-        val longPref = keeper.recallLong(longPreferencesKey("long"), 0L)
-        assertEquals(0L, longPref)
+        val key = longPreferencesKey("long")
+        runBlocking { keeper.keepLong(key, 42L) }
+        val longPref = keeper.recallLong(key, 0L)
+        assertEquals(42L, longPref)
     }
 }

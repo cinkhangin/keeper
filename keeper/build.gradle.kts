@@ -63,7 +63,7 @@ mavenPublishing {
 
     signAllPublications()
 
-    coordinates("com.naulian", "keeper", "0.2.1")
+    coordinates("com.naulian", "keeper", "0.3.0")
 
     pom {
         name.set("Keeper")
