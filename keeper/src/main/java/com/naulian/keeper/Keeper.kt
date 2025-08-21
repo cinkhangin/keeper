@@ -8,7 +8,6 @@ import androidx.datastore.preferences.core.edit
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.runBlocking
-import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import javax.inject.Inject
 
@@ -19,50 +18,50 @@ interface KeeperData
 
 class Keeper @Inject constructor(private val dsPrefs: DataStore<Preferences>) {
     //as Flow
-    private fun <T> DsPrefs.recallPrefAsFlow(
+    private fun <T> DsPrefs.takePrefAsFlow(
         key: PrefKey<T>, defValue: T
     ) = data.map { it[key] ?: defValue }
 
-    fun recallStringAsFlow(
+    fun takeAsFlow(
         key: PrefKey<String>, defValue: String = ""
-    ) = dsPrefs.recallPrefAsFlow(key, defValue)
+    ) = dsPrefs.takePrefAsFlow(key, defValue)
 
-    fun recallBooleanAsFlow(
+    fun takeAsFlow(
         key: PrefKey<Boolean>, defValue: Boolean = false
-    ) = dsPrefs.recallPrefAsFlow(key, defValue)
+    ) = dsPrefs.takePrefAsFlow(key, defValue)
 
-    fun recallIntAsFlow(
+    fun takeAsFlow(
         key: PrefKey<Int>, defValue: Int = 0
-    ) = dsPrefs.recallPrefAsFlow(key, defValue)
+    ) = dsPrefs.takePrefAsFlow(key, defValue)
 
-    fun recallLongAsFlow(
+    fun takeAsFlow(
         key: PrefKey<Long>, defValue: Long = 0L
-    ) = dsPrefs.recallPrefAsFlow(key, defValue)
+    ) = dsPrefs.takePrefAsFlow(key, defValue)
 
-    fun recallFloatAsFlow(
+    fun takeAsFlow(
         key: PrefKey<Float>, defValue: Float = 0f
-    ) = dsPrefs.recallPrefAsFlow(key, defValue)
+    ) = dsPrefs.takePrefAsFlow(key, defValue)
 
     //collect
-    suspend fun recallStringAsFlow(
+    suspend fun takeAsFlow(
         key: PrefKey<String>, defValue: String = "", action: (String) -> Unit
-    ) = dsPrefs.recallPrefAsFlow(key, defValue).collect(action)
+    ) = dsPrefs.takePrefAsFlow(key, defValue).collect(action)
 
-    suspend fun recallBooleanAsFlow(
+    suspend fun takeAsFlow(
         key: PrefKey<Boolean>, defValue: Boolean = false, action: (Boolean) -> Unit
-    ) = dsPrefs.recallPrefAsFlow(key, defValue).collect(action)
+    ) = dsPrefs.takePrefAsFlow(key, defValue).collect(action)
 
-    suspend fun recallIntAsFlow(
+    suspend fun takeAsFlow(
         key: PrefKey<Int>, defValue: Int = 0, action: (Int) -> Unit
-    ) = dsPrefs.recallPrefAsFlow(key, defValue).collect(action)
+    ) = dsPrefs.takePrefAsFlow(key, defValue).collect(action)
 
-    suspend fun recallLongAsFlow(
+    suspend fun takeAsFlow(
         key: PrefKey<Long>, defValue: Long = 0L, action: (Long) -> Unit
-    ) = dsPrefs.recallPrefAsFlow(key, defValue).collect(action)
+    ) = dsPrefs.takePrefAsFlow(key, defValue).collect(action)
 
-    suspend fun recallFloatAsFlow(
+    suspend fun takeAsFlow(
         key: PrefKey<Float>, defValue: Float = 0f, action: (Float) -> Unit
-    ) = dsPrefs.recallPrefAsFlow(key, defValue).collect(action)
+    ) = dsPrefs.takePrefAsFlow(key, defValue).collect(action)
 
 
     //keep
@@ -70,59 +69,59 @@ class Keeper @Inject constructor(private val dsPrefs: DataStore<Preferences>) {
         key: PrefKey<T>, value: T
     ) = edit { it[key] = value }
 
-    suspend fun keepBoolean(
+    suspend fun keep(
         key: PrefKey<Boolean>, value: Boolean
     ) = dsPrefs.keepPref(key, value)
 
-    suspend fun keepInt(
+    suspend fun keep(
         key: PrefKey<Int>, value: Int
     ) = dsPrefs.keepPref(key, value)
 
-    suspend fun keepString(
+    suspend fun keep(
         key: PrefKey<String>, value: String
     ) = dsPrefs.keepPref(key, value)
 
-    suspend fun keepLong(
+    suspend fun keep(
         key: PrefKey<Long>, value: Long
     ) = dsPrefs.keepPref(key, value)
 
-    suspend fun keepFloat(
+    suspend fun keep(
         key: PrefKey<Float>, value: Float
     ) = dsPrefs.keepPref(key, value)
 
 
     //recall
-    fun recallBoolean(key: PrefKey<Boolean>, defValue: Boolean = false) =
-        runBlocking { recallBooleanAsFlow(key, defValue).first() }
+    fun take(key: PrefKey<Boolean>, defValue: Boolean = false) =
+        runBlocking { takeAsFlow(key, defValue).first() }
 
-    fun recallInt(key: PrefKey<Int>, defValue: Int = 0) =
-        runBlocking { recallIntAsFlow(key, defValue).first() }
+    fun take(key: PrefKey<Int>, defValue: Int = 0) =
+        runBlocking { takeAsFlow(key, defValue).first() }
 
-    fun recallString(key: PrefKey<String>, defValue: String = "") =
-        runBlocking { recallStringAsFlow(key, defValue).first() }
+    fun take(key: PrefKey<String>, defValue: String = "") =
+        runBlocking { takeAsFlow(key, defValue).first() }
 
-    fun recallLong(key: PrefKey<Long>, defValue: Long = 0L) =
-        runBlocking { recallLongAsFlow(key, defValue).first() }
+    fun take(key: PrefKey<Long>, defValue: Long = 0L) =
+        runBlocking { takeAsFlow(key, defValue).first() }
 
-    fun recallFloat(key: PrefKey<Float>, defValue: Float = 0f) =
-        runBlocking { recallFloatAsFlow(key, defValue).first() }
+    fun take(key: PrefKey<Float>, defValue: Float = 0f) =
+        runBlocking { takeAsFlow(key, defValue).first() }
 
     suspend inline fun <reified T : KeeperData> keep(key: PrefKey<String>, value: T) {
         val dataString = Json.encodeToString(value)
-        keepString(key, dataString)
+        keep(key, dataString)
     }
 
-    inline fun <reified T> recall(key: PrefKey<String>, defValue: T): T {
-        val dataString = recallString(key)
+    inline fun <reified T> take(key: PrefKey<String>, defValue: T): T {
+        val dataString = take(key)
         if (dataString.isEmpty()) return defValue
 
         val dataObj = Json.decodeFromString<T>(dataString)
         return dataObj
     }
 
-    suspend inline fun <reified T> recallAsFlow(
+    suspend inline fun <reified T> takeAsFlow(
         key: PrefKey<String>, defValue: T, crossinline action: (T) -> Unit
-    ) = recallStringAsFlow(key) {
+    ) = takeAsFlow(key) {
         if (it.isEmpty()) action(defValue)
         else action(Json.decodeFromString<T>(it))
     }

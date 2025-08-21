@@ -34,18 +34,18 @@ class MainActivity : ComponentActivity() {
         val user = User(name = "Naulian", age = 25)
 
         runBlocking {
-            keeper.keepString(keyEmail, "email@naulian.com")
+            keeper.keep(keyEmail, "email@naulian.com")
             keeper.keep(keyUser, user)
         }
 
         //val one = keeper.recallString(keyEmail)
-        val savedUser = keeper.recall(keyUser, User())
+        val savedUser = keeper.take(keyUser, User())
 
         println(savedUser)
 
         setContent {
             LaunchedEffect(Unit) {
-                keeper.recallIntAsFlow(keyNum) {
+                keeper.takeAsFlow(keyNum) {
                     println(it)
                 }
             }
@@ -53,7 +53,7 @@ class MainActivity : ComponentActivity() {
             LaunchedEffect(Unit) {
                 repeat(5) {
                     delay(1000)
-                    keeper.keepInt(keyNum, it)
+                    keeper.keep(keyNum, it)
                 }
             }
 

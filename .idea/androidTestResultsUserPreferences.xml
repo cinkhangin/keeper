@@ -8,6 +8,7 @@
             <AndroidTestResultsTableState>
               <option name="preferredColumnWidths">
                 <map>
+                  <entry key="Creator_Dev" value="120" />
                   <entry key="Creator_Pro" value="120" />
                   <entry key="Duration" value="90" />
                   <entry key="Tests" value="360" />
