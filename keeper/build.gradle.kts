@@ -6,7 +6,7 @@ plugins {
     alias(libs.plugins.google.ksp)
     alias(libs.plugins.google.hilt)
     alias(libs.plugins.kotlinx.serialization)
-    id("com.vanniktech.maven.publish")
+    alias(libs.plugins.vanniktech.maven)
 }
 
 android {
@@ -44,7 +44,6 @@ kotlin {
 dependencies {
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
-    implementation(libs.material)
 
     implementation(libs.androidx.espresso.core)
     testImplementation(libs.junit)
