@@ -1,4 +1,4 @@
-package com.naulian.keeper
+package com.ckgin.keeper
 
 import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.floatPreferencesKey
@@ -26,8 +26,8 @@ class ExampleInstrumentedTest {
         val appContext = InstrumentationRegistry.getInstrumentation().targetContext
         val keeper = Keeper(appContext.datastore)
         val key = intPreferencesKey("int")
-        runBlocking { keeper.keepInt(key, 42) }
-        val intPref = keeper.recallInt(key, 0)
+        runBlocking { keeper.keep(key, 42) }
+        val intPref = keeper.take(key, 0)
         assertEquals(42, intPref)
     }
 
@@ -36,8 +36,8 @@ class ExampleInstrumentedTest {
         val appContext = InstrumentationRegistry.getInstrumentation().targetContext
         val keeper = Keeper(appContext.datastore)
         val key = stringPreferencesKey("string")
-        runBlocking { keeper.keepString(key, "42") }
-        val stringPref = keeper.recallString(key, "")
+        runBlocking { keeper.keep(key, "42") }
+        val stringPref = keeper.take(key, "")
         assertEquals("42", stringPref)
     }
 
@@ -46,8 +46,8 @@ class ExampleInstrumentedTest {
         val appContext = InstrumentationRegistry.getInstrumentation().targetContext
         val keeper = Keeper(appContext.datastore)
         val key = booleanPreferencesKey("boolean")
-        runBlocking { keeper.keepBoolean(key, true) }
-        val booleanPref = keeper.recallBoolean(key, false)
+        runBlocking { keeper.keep(key, true) }
+        val booleanPref = keeper.take(key, false)
         assertEquals(true, booleanPref)
     }
 
@@ -56,8 +56,8 @@ class ExampleInstrumentedTest {
         val appContext = InstrumentationRegistry.getInstrumentation().targetContext
         val keeper = Keeper(appContext.datastore)
         val key = floatPreferencesKey("float")
-        runBlocking { keeper.keepFloat(key, 4.2f) }
-        val floatPref = keeper.recallFloat(key, 0f)
+        runBlocking { keeper.keep(key, 4.2f) }
+        val floatPref = keeper.take(key, 0f)
         assertEquals(4.2f, floatPref)
     }
 
@@ -66,8 +66,8 @@ class ExampleInstrumentedTest {
         val appContext = InstrumentationRegistry.getInstrumentation().targetContext
         val keeper = Keeper(appContext.datastore)
         val key = longPreferencesKey("long")
-        runBlocking { keeper.keepLong(key, 42L) }
-        val longPref = keeper.recallLong(key, 0L)
+        runBlocking { keeper.keep(key, 42L) }
+        val longPref = keeper.take(key, 0L)
         assertEquals(42L, longPref)
     }
 }

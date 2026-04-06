@@ -1,8 +1,5 @@
-import org.jetbrains.kotlin.gradle.dsl.JvmTarget
-
 plugins {
     alias(libs.plugins.android.library)
-    alias(libs.plugins.kotlin.android)
     alias(libs.plugins.google.ksp)
     alias(libs.plugins.google.hilt)
     alias(libs.plugins.kotlinx.serialization)
@@ -10,7 +7,7 @@ plugins {
 }
 
 android {
-    namespace = "com.naulian.keeper"
+    namespace = "com.ckgin.keeper"
     compileSdk = 36
 
     defaultConfig {
@@ -35,11 +32,6 @@ android {
     }
 }
 
-kotlin {
-    compilerOptions {
-        jvmTarget.set(JvmTarget.JVM_17)
-    }
-}
 
 dependencies {
     implementation(libs.androidx.core.ktx)
@@ -66,9 +58,9 @@ mavenPublishing {
     signAllPublications()
 
     coordinates(
-        "com.naulian",
+        "com.ckgin",
         "keeper",
-        "0.4.0"
+        "1.0.0-alpha01"
     )
 
     pom {
@@ -85,8 +77,8 @@ mavenPublishing {
         }
         developers {
             developer {
-                id.set("naulian")
-                name.set("Naulian")
+                id.set("ckgin")
+                name.set("Cin Khan Gin")
                 url.set("https://github.com/cinkhangin/")
             }
         }

@@ -1,6 +1,6 @@
 @file:Suppress("unused")
 
-package com.naulian.keeper
+package com.ckgin.keeper
 
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences

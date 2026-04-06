@@ -4,15 +4,23 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.material3.Button
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.text.input.TextFieldState
+import androidx.compose.foundation.text.input.setTextAndPlaceCursorAtEnd
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
 import androidx.compose.runtime.LaunchedEffect
-import androidx.datastore.preferences.core.intPreferencesKey
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.runtime.snapshotFlow
 import androidx.datastore.preferences.core.stringPreferencesKey
-import com.naulian.keeper.Keeper
-import com.naulian.keeper.KeeperData
-import com.naulian.keeper.datastore
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.runBlocking
+import com.ckgin.keeper.Keeper
+import com.ckgin.keeper.KeeperData
+import com.ckgin.keeper.datastore
+import kotlinx.coroutines.FlowPreview
+import kotlinx.coroutines.flow.debounce
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -22,42 +30,44 @@ data class User(
 ) : KeeperData
 
 class MainActivity : ComponentActivity() {
+
+    @FlowPreview
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
 
         val keeper = Keeper(this.datastore)
-        val keyEmail = stringPreferencesKey("email")
-        val keyUser = stringPreferencesKey("user")
-        val keyNum = intPreferencesKey("number")
-
-        val user = User(name = "Naulian", age = 25)
-
-        runBlocking {
-            keeper.keep(keyEmail, "email@naulian.com")
-            keeper.keep(keyUser, user)
-        }
-
-        //val one = keeper.recallString(keyEmail)
-        val savedUser = keeper.take(keyUser, User())
-
-        println(savedUser)
 
         setContent {
+            val textKey = stringPreferencesKey("text")
+            val textFieldState = remember {
+                TextFieldState()
+            }
+            var savedText by remember { mutableStateOf("") }
+
             LaunchedEffect(Unit) {
-                keeper.takeAsFlow(keyNum) {
-                    println(it)
-                }
+                //update state
+                val text = keeper.take(textKey)
+                textFieldState.setTextAndPlaceCursorAtEnd(text)
+                savedText = text
+
+                //save text
+                snapshotFlow { textFieldState.text }.debounce(1000)
+                    .collect {
+                        keeper.keep(textKey, it.toString())
+                    }
             }
 
             LaunchedEffect(Unit) {
-                repeat(5) {
-                    delay(1000)
-                    keeper.keep(keyNum, it)
+                keeper.takeAsFlow(textKey).collect {
+                    savedText = it
                 }
             }
 
-            Button(onClick = {}) { }
+            Column {
+                TextField(state = textFieldState)
+                Text(text = savedText)
+            }
         }
     }
 }
