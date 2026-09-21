@@ -1,18 +1,17 @@
 [versions]
-agp = "9.1.0"
+agp = "9.4.1"
 datastore = "1.2.1"
-kotlin = "2.3.20"
-coreKtx = "1.18.0"
+kotlin = "2.4.20"
+coreKtx = "1.19.0"
 junit = "4.13.2"
 junitVersion = "1.3.0"
 espressoCore = "3.7.0"
 activityCompose = "1.13.0"
-composeBom = "2026.03.01"
-serialization = "1.10.0"
-hilt = "2.59.2"
-ksp = "2.3.6"
-appcompat = "1.7.1"
-vanniktech = "0.36.0"
+serialization = "1.11.0"
+hilt = "2.60.1"
+ksp = "2.3.10"
+appcompat = "1.8.0"
+vanniktech = "0.37.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -21,14 +20,10 @@ junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
 androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
 androidx-activity-compose = { group = "androidx.activity", name = "activity-compose", version.ref = "activityCompose" }
-androidx-compose-bom = { group = "androidx.compose", name = "compose-bom", version.ref = "composeBom" }
-androidx-ui = { group = "androidx.compose.ui", name = "ui" }
-androidx-ui-graphics = { group = "androidx.compose.ui", name = "ui-graphics" }
-androidx-ui-tooling-preview = { group = "androidx.compose.ui", name = "ui-tooling-preview" }
+
 kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "serialization" }
 google-hilt-android = { module = "com.google.dagger:hilt-android", version.ref = "hilt" }
 google-hilt-compiler = { module = "com.google.dagger:hilt-compiler", version.ref = "hilt" }
-androidx-material3 = { group = "androidx.compose.material3", name = "material3" }
 androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
 
 [plugins]

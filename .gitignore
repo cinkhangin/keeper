@@ -14,3 +14,4 @@
 .cxx
 local.properties
 gradle.properties
+/gradle/gradle-daemon-jvm.properties

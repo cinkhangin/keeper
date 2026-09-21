@@ -8,7 +8,7 @@ plugins {
 
 android {
     namespace = "com.ckgin.keeper"
-    compileSdk = 36
+    compileSdk = 37
 
     defaultConfig {
         minSdk = 26
@@ -37,7 +37,6 @@ dependencies {
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
 
-    implementation(libs.androidx.espresso.core)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -60,7 +59,7 @@ mavenPublishing {
     coordinates(
         "com.ckgin",
         "keeper",
-        "1.0.0-alpha01"
+        "1.0.0"
     )
 
     pom {
