@@ -1,6 +1,5 @@
 plugins {
     alias(libs.plugins.android.application)
-    alias(libs.plugins.kotlinx.serialization)
 }
 
 android {
@@ -35,7 +34,5 @@ android {
 dependencies {
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.activity.compose)
-
-    implementation(libs.kotlinx.serialization.json)
     implementation(project(":keeper"))
 }

@@ -13,13 +13,9 @@ val Context.datastore by preferencesDataStore(name = "keeper")
 
 @Module
 @InstallIn(SingletonComponent::class)
-object KeepModule {
+object KeeperModule {
 
     @Provides
     @Singleton
-    fun providesDb(@ApplicationContext context: Context) = context.datastore
-
-    @Provides
-    @Singleton
-    fun providesKeeper(datastore: DsPrefs) = Keeper(datastore)
+    fun providesKeeper(@ApplicationContext context: Context) = context.datastore
 }

@@ -2,7 +2,6 @@ plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.google.ksp)
     alias(libs.plugins.google.hilt)
-    alias(libs.plugins.kotlinx.serialization)
     alias(libs.plugins.vanniktech.maven)
 }
 
@@ -41,11 +40,9 @@ dependencies {
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
 
-    implementation(libs.kotlinx.serialization.json)
-
     //datastore
     api(libs.androidx.datastore.preferences)
-    //api(libs.androidx.datastore)
+
     //hilt
     implementation(libs.google.hilt.android)
     ksp(libs.google.hilt.compiler)
